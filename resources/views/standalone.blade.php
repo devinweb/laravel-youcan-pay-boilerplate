@@ -15,9 +15,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700&display=swap"
         rel="stylesheet">
     <script src="https://pay.youcan.shop/js/ycpay.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.11.0/qs.js"
-        integrity="sha512-QXQgo/rJDUE26PrRHxhISwratdyZi9e/zvnlv72Mk6W3lmTa5YiiVaR9cYxNRjQIZXzAShwslz6rkOttv90g6g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
@@ -41,7 +38,6 @@
             </div>
         </a>
     </div>
-
     <div id="app" class="h-full flex container mx-auto md:flex">
         <div class="flex-1 flex flex-col p-4">
             <div class="items-start flex text-gray-600">
@@ -116,14 +112,10 @@
             <div class="w-full flex items-center justify-center  mt-4 mb-8">
                 <h2 class="text-gray-900 text-2xl font-semibold">طرف الدفع المتاحة</h2>
             </div>
-
             <div class="flex flex-col items-center">
-                <div class="m-4 flex mt-10 min-h-payment-form relative" dir="ltr" id="youcanpay-form">
-
-                </div>
                 <div class="m-4 w-8/12">
                     <button @click="payNow"
-                        class="w-full relative justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        class="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                             <!-- Heroicon name: mini/lock-closed -->
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -138,14 +130,11 @@
                     </button>
                 </div>
             </div>
+
         </div>
     </div>
     <script>
-        var token = "{{$token}}"
-        var public_key = "{{$public_key}}"
-        var isSandbox = "{{$isSandbox}}"
-        var language = "{{$language}}"
-        var original_price = "{{$original_price}}"
+        var payment_url = "{{$payment_url}}"
 
         var app = new Vue({
             el: '#app',
@@ -154,30 +143,19 @@
                 ycPay: null
             },
             methods: {
-                showForm() {
-                    this.ycPay = new YCPay(public_key, {
-                        formContainer: '#youcanpay-form',
-                        locale: language,
-                        isSandbox: isSandbox,
-                        errorContainer: '#error-container',
-                    });
-                    this.ycPay.renderCreditCardForm();
-                },
+
                 payNow() {
-                    this.ycPay.pay(token).then(this.successCallback).catch(this.errorCallback);
+                    location.href = payment_url
                 },
                 successCallback(data) {
-                    params = Qs.stringify(data)
-                    location.href = `http://youcanpay.test/success?${params}`
+                    console.log('data --->', data)
+                    location.href = 'http://youcanpay.test/success'
                 },
                 errorCallback(data) {
-                    params = Qs.stringify(data)
-                    location.href = `http://youcanpay.test/error?${params}`
+                    console.log('error --->', data)
+                    location.href = 'http://youcanpay.test/error'
                 }
             },
-            mounted() {
-                this.showForm()
-            }
         })
     </script>
 </body>

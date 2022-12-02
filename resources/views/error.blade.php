@@ -16,9 +16,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-    <script>
-
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.11.0/qs.js"
+        integrity="sha512-QXQgo/rJDUE26PrRHxhISwratdyZi9e/zvnlv72Mk6W3lmTa5YiiVaR9cYxNRjQIZXzAShwslz6rkOttv90g6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
         body {
@@ -231,13 +231,10 @@
                     </div>
                     <div class="mt-8 flex items-center flex-col">
                         <span class="text-gray-500 text-lg font-normal mb-4">@{{ errorMessage }}</span>
-                        <!-- <div class="flex items-start justify-start">
-                            <span class="text-gray-900 text-4xl font-medium">$18.00</span>
-                            <div class="flex flex-col mr-1">
-                                <span class="text-gray-500 leading-none">في</span>
-                                <span class="text-gray-500 leading-none">الشهر</span>
-                            </div>
-                        </div> -->
+                        <div class="flex items-center justify-center">
+                            <span class="text-gray-900 text-2xl font-medium">رمز العملية</span>
+                            <span class="text-gray-500 leading-none mr-2">@{{transaction_id}}</span>
+                        </div>
 
                         <div class="flex-1 flex mt-8">
                             <a href="{{ url('/') }}" class="text-blue-500">العودة للصفحة الرئيسية</a>
@@ -252,7 +249,9 @@
             el: '#app',
 
             data: {
-                errorMessage: ''
+                errorMessage: '',
+                defaultMessage: "حدثت مشكلة الرجاء التاكد من معلومات حسابك!",
+                transaction_id: ''
             },
             computed: {
 
@@ -261,7 +260,11 @@
 
 
             },
-            mounted() {}
+            mounted() {
+                const queryString = Qs.parse(window.location.search.replace('?', ''));
+                this.errorMessage = queryString?.response?.message || this.defaultMessage
+                this.transaction_id = queryString?.response?.transaction_id || queryString?.transaction_id
+            }
         })
     </script>
 </body>
